@@ -1,0 +1,1716 @@
+/* =========================
+기본 설정
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "맑은 고딕", sans-serif;
+}
+
+
+:root {
+–green: #9a876d;
+–blue: #9a876d;
+–text: #494239;
+–subtext: #8d8377;
+–border: #eee7dc;
+–shadow: 0 4px 18px rgba(91, 76, 54, 0.045);
+}
+
+body {
+background: #f7f4ed;
+color: var(–text);
+line-height: 1.65;
+}
+
+button,
+input,
+textarea,
+select {
+font: inherit;
+}
+
+button {
+cursor: pointer;
+transition: background-color 0.2s ease,
+box-shadow 0.2s ease,
+transform 0.2s ease;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+outline: 2px solid #c8b79e;
+outline-offset: 3px;
+}
+
+/* =========================
+전체 화면
+========================= */
+
+.container {
+width: 95%;
+max-width: 1000px;
+margin: 30px auto 40px;
+}
+
+/* 달력 위 학교 제목은 표시 */
+.container > header.school-header h1 {
+    visibility: visible;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+
+/* =========================
+상단 버튼
+========================= */
+
+.top-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 12px;
+margin-bottom: 22px;
+}
+
+.top-bar button {
+padding: 10px 17px;
+border: 1px solid #e5dac9;
+border-radius: 12px;
+background: #eee6d9;
+color: #635543;
+font-size: 15px;
+font-weight: 500;
+}
+
+.top-bar button:hover,
+#addScheduleBtn:hover {
+background: #e5dac9;
+box-shadow: 0 4px 12px rgba(91, 76, 54, 0.08);
+}
+
+/* =========================
+검색창
+========================= */
+
+.search-box {
+display: flex;
+gap: 9px;
+margin-bottom: 22px;
+}
+
+.search-box input {
+flex: 1;
+min-width: 0;
+padding: 12px 15px;
+border-radius: 12px;
+border: 1px solid #e9e2d7;
+background: #fffefa;
+color: var(–text);
+transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box input::placeholder {
+color: #b2a89a;
+}
+
+.search-box input:focus {
+outline: none;
+border-color: #c8b79e;
+box-shadow: 0 0 0 3px rgba(200, 183, 158, 0.15);
+}
+
+.search-box button {
+padding: 11px 19px;
+border: 1px solid #ded1bf;
+border-radius: 12px;
+background: #e9dfd0;
+color: #635543;
+font-weight: 500;
+}
+
+.search-box button:hover {
+background: #dfd1bd;
+}
+
+/* =========================
+달력
+========================= */
+
+.weekdays,
+#calendar {
+display: grid;
+grid-template-columns: repeat(7, minmax(0, 1fr));
+gap: 8px;
+}
+
+.weekdays {
+margin-bottom: 9px;
+}
+
+.weekdays div {
+text-align: center;
+font-size: 14px;
+font-weight: 500;
+color: #918575;
+padding: 8px 0;
+}
+
+.day {
+min-width: 0;
+min-height: 110px;
+padding: 12px;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+background: #fffefa;
+border: 1px solid #eee8df;
+border-radius: 13px;
+cursor: pointer;
+box-shadow: var(–shadow);
+transition: border-color 0.2s,
+box-shadow 0.2s,
+transform 0.2s;
+}
+
+.day:hover {
+border-color: #d4c4ae;
+box-shadow: 0 6px 18px rgba(91, 76, 54, 0.08);
+transform: translateY(-1px);
+}
+
+.day strong {
+font-size: 17px;
+font-weight: 500;
+color: #51483d;
+}
+
+.today {
+border: 1.5px solid #b6a187;
+background: #fdf8ef;
+}
+
+/* =========================
+일정 종류별 색상
+========================= */
+
+.day.행사 {
+background: #f5f0e5;
+}
+
+.day.시험 {
+background: #f8eeeb;
+}
+
+.day.공휴일 {
+background: #f0f0e9;
+}
+
+.day.방학 {
+background: #edf2ed;
+}
+
+.day.체험학습 {
+background: #f7f0e3;
+}
+
+.day.방송 {
+background: #f2edf3;
+}
+
+.day.기타 {
+background: #f2f0ec;
+}
+
+/* =========================
+일정 이름
+========================= */
+
+.event-name {
+display: inline-block;
+max-width: 100%;
+margin-top: 7px;
+padding: 4px 7px;
+border-radius: 6px;
+background: rgba(255, 254, 250, 0.9);
+font-size: 12px;
+font-weight: 400;
+color: #655a4d;
+overflow-wrap: anywhere;
+}
+
+/* =========================
+일정 추가 버튼
+========================= */
+
+#addScheduleBtn {
+width: 100%;
+margin-top: 22px;
+padding: 13px;
+border: 1px solid #e5dac9;
+border-radius: 12px;
+background: #eee6d9;
+color: #635543;
+font-size: 15px;
+font-weight: 500;
+}
+
+/* =========================
+팝업 공통
+========================= */
+
+.popup {
+display: none;
+position: fixed;
+inset: 0;
+padding: 16px;
+background: rgba(61, 53, 43, 0.32);
+backdrop-filter: blur(5px);
+justify-content: center;
+align-items: center;
+z-index: 999;
+}
+
+.popup-box {
+position: relative;
+width: 90%;
+max-width: 470px;
+max-height: 90vh;
+overflow-y: auto;
+padding: 30px;
+background: #fffefa;
+border: 1px solid #f1e9dd;
+border-radius: 19px;
+box-shadow: 0 18px 55px rgba(61, 53, 43, 0.14);
+}
+
+.popup-box h2 {
+margin-bottom: 20px;
+font-size: 23px;
+font-weight: 500;
+letter-spacing: -0.5px;
+}
+
+.popup-box input,
+.popup-box textarea,
+.popup-box select {
+display: block;
+width: 100%;
+margin-bottom: 13px;
+padding: 12px 13px;
+border: 1px solid #e9e2d7;
+border-radius: 10px;
+background: #fffefa;
+color: var(–text);
+font-size: 15px;
+}
+
+.popup-box input:focus,
+.popup-box textarea:focus,
+.popup-box select:focus {
+outline: none;
+border-color: #c8b79e;
+box-shadow: 0 0 0 3px rgba(200, 183, 158, 0.13);
+}
+
+.popup-box textarea {
+resize: vertical;
+min-height: 110px;
+}
+
+.popup-box button {
+width: 100%;
+margin-top: 8px;
+padding: 12px;
+border: 1px solid #e5dac9;
+border-radius: 10px;
+background: #eee6d9;
+color: #635543;
+font-weight: 500;
+}
+
+.popup-box button:hover {
+background: #e5dac9;
+}
+
+/* 닫기 버튼 */
+
+.close-btn {
+position: absolute;
+top: 12px;
+right: 12px;
+width: 34px !important;
+height: 34px !important;
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 0 !important;
+padding: 0 !important;
+border: none;
+border-radius: 10px;
+background: #f4f0e9 !important;
+color: #766b5e !important;
+font-size: 20px;
+}
+
+.close-btn:hover {
+background: #eae2d6 !important;
+}
+
+/* =========================
+일정 상세 보기
+========================= */
+
+#viewImage {
+display: none;
+width: 100%;
+margin: 15px 0;
+border-radius: 12px;
+}
+
+#viewTitle {
+margin-bottom: 14px;
+padding-right: 25px;
+font-size: 25px;
+font-weight: 500;
+letter-spacing: -0.5px;
+overflow-wrap: anywhere;
+}
+
+#viewTitle::after {
+content: “”;
+display: block;
+width: 35px;
+height: 2px;
+margin-top: 11px;
+border-radius: 2px;
+background: #c5b197;
+}
+
+#viewDate,
+#viewPlace,
+#viewType {
+display: flex;
+align-items: center;
+gap: 8px;
+margin: 11px 0;
+font-size: 15px;
+color: #83786b;
+overflow-wrap: anywhere;
+}
+
+.info-box {
+margin: 14px 0;
+padding: 13px;
+border: 1px solid #eee7dc;
+border-radius: 11px;
+background: #f8f5ef;
+color: #655b50;
+line-height: 1.75;
+}
+
+#viewContent {
+margin-top: 18px;
+padding-top: 16px;
+border-top: 1px solid #eee7dc;
+color: #655b50;
+font-size: 15px;
+line-height: 1.85;
+overflow-wrap: anywhere;
+}
+
+/* =========================
+상세 보기 버튼
+========================= */
+
+.popup-buttons {
+display: flex;
+justify-content: flex-end;
+gap: 8px;
+margin-top: 18px;
+}
+
+.popup-buttons button,
+.button-row button {
+width: auto;
+min-width: 75px;
+margin-top: 0;
+padding: 10px 15px;
+border: 1px solid #e5dac9;
+border-radius: 9px;
+background: #eee6d9;
+color: #635543;
+font-size: 14px;
+font-weight: 500;
+}
+
+#editBtn {
+background: #e8e2d8;
+color: #625747;
+}
+
+#editBtn:hover {
+background: #ddd3c4;
+}
+
+#deleteBtn {
+background: #f5e8e4;
+border-color: #ead5ce;
+color: #94675c;
+}
+
+#deleteBtn:hover {
+background: #eedbd5;
+}
+
+#closeView {
+background: #f4f0e9;
+color: #766b5e;
+}
+
+#closeView:hover {
+background: #eae2d6;
+}
+
+#editBtn:hover,
+#deleteBtn:hover,
+#closeView:hover {
+transform: translateY(-1px);
+}
+
+/* =========================
+모바일 화면
+========================= */
+
+@media (max-width: 600px) {
+.container {
+width: 96%;
+margin: 30px auto 30px;
+}
+
+/* 모바일에서도 위쪽 여백 유지 */
+.container h1 {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+.top-bar {
+    gap: 8px;
+    margin-bottom: 15px;
+}
+.top-bar button {
+    padding: 9px 11px;
+    font-size: 13px;
+}
+.search-box {
+    gap: 7px;
+    margin-bottom: 16px;
+}
+.search-box input {
+    padding: 10px;
+    font-size: 13px;
+}
+.search-box button {
+    padding: 10px 12px;
+    font-size: 13px;
+}
+.weekdays,
+#calendar {
+    gap: 4px;
+}
+.weekdays {
+    margin-bottom: 5px;
+}
+.weekdays div {
+    padding: 5px 0;
+    font-size: 12px;
+}
+.day {
+    min-height: 72px;
+    padding: 6px 4px;
+    border-radius: 8px;
+}
+.day strong {
+    font-size: 13px;
+}
+.event-name {
+    margin-top: 5px;
+    padding: 3px 4px;
+    border-radius: 5px;
+    font-size: 9px;
+    line-height: 1.3;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+#addScheduleBtn {
+    margin-top: 17px;
+    padding: 12px;
+    font-size: 14px;
+}
+.popup {
+    padding: 12px;
+}
+.popup-box {
+    width: 100%;
+    max-width: 470px;
+    max-height: 88vh;
+    padding: 25px 20px;
+    border-radius: 16px;
+}
+.popup-box h2 {
+    padding-right: 20px;
+    font-size: 21px;
+}
+.popup-box input,
+.popup-box textarea,
+.popup-box select {
+    font-size: 14px;
+}
+.popup-buttons {
+    gap: 7px;
+    flex-wrap: wrap;
+}
+.popup-buttons button,
+.button-row button {
+    flex: 1;
+    padding: 10px 8px;
+    font-size: 13px;
+}
+#viewTitle {
+    font-size: 22px;
+}
+#viewDate,
+#viewPlace,
+#viewType {
+    font-size: 14px;
+}
+#viewContent {
+    font-size: 14px;
+}
+
+}
+
+/* 움직임 줄이기 설정을 사용하는 경우 */
+
+@media (prefers-reduced-motion: reduce) {
+*,
+*::before,
+*::after {
+transition: none !important;
+scroll-behavior: auto !important;
+}
+}
+/* 상세 보기 아이콘 디자인 */
+
+.detail-row {
+display: flex;
+align-items: center;
+gap: 14px;
+margin: 15px 0;
+}
+
+.detail-row p {
+min-width: 0;
+overflow-wrap: anywhere;
+color: #81776b;
+font-size: 15px;
+}
+
+.detail-icon {
+width: 48px;
+height: 48px;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 15px;
+}
+
+.detail-icon svg {
+width: 25px;
+height: 25px;
+fill: none;
+stroke: currentColor;
+stroke-width: 1.7;
+stroke-linecap: round;
+stroke-linejoin: round;
+}
+
+.calendar-icon {
+background: #eee5d6;
+color: #8b7965;
+}
+
+.place-icon {
+background: #f3e8e4;
+color: #9b776a;
+}
+
+.type-icon {
+background: #e9eee6;
+color: #7c8a75;
+}
+
+#viewTitle {
+padding-right: 35px;
+}
+
+#viewTitle::after {
+display: none;
+}
+
+.info-box {
+margin-top: 22px;
+}
+
+@media (max-width: 600px) {
+.detail-row {
+gap: 11px;
+margin: 12px 0;
+}
+
+.detail-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+}
+.detail-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+}
+/* 화이트 중심 디자인 */
+
+body {
+    background: #ffffff;
+    color: #393630;
+}
+
+.day {
+    background: #ffffff;
+    border-color: #eeeeec;
+    box-shadow: 0 3px 12px rgba(40, 35, 28, 0.035);
+}
+
+.day.행사 { background: #faf7f1; }
+.day.시험 { background: #fbf5f3; }
+.day.공휴일 { background: #f5f7fa; }
+.day.방학 { background: #f3f7f3; }
+.day.체험학습 { background: #faf6ed; }
+.day.방송 { background: #f7f4f8; }
+.day.기타 { background: #f6f6f5; }
+
+.search-box input,
+.popup-box {
+    background: #ffffff;
+}
+
+.info-box {
+    background: #fafafa;
+    border-color: #eeeeec;
+}
+
+#viewContent {
+    border-color: #eeeeec;
+}
+
+.weekdays div {
+    color: #898177;
+}
+
+/* =========================
+WHITE + MINT MODERN THEME
+========================= */
+
+:root {
+–green: #18A999;
+–blue: #18A999;
+–text: #303A3A;
+–subtext: #748482;
+–border: #E8EFED;
+–shadow: 0 3px 14px rgba(38, 75, 68, 0.045);
+}
+
+body {
+background: #FFFFFF;
+color: #303A3A;
+font-family: “Pretendard”, “SUIT”,
+“Apple SD Gothic Neo”, “Malgun Gothic”, sans-serif;
+}
+
+/* 제목은 숨기되 상단 여백은 유지 */
+.container h1 {
+visibility: hidden;
+height: 0;
+margin: 0;
+padding: 0;
+}
+
+/* 상단 버튼 */
+.top-bar button {
+background: #E8F8F5;
+color: #168F82;
+border: 1px solid #D7F0EB;
+border-radius: 10px;
+font-weight: 500;
+}
+
+.top-bar button:hover,
+#addScheduleBtn:hover {
+background: #D9F3EE;
+box-shadow: 0 4px 12px rgba(24, 169, 153, 0.10);
+}
+
+/* 검색창 */
+.search-box input {
+background: #FFFFFF;
+border-color: #E4ECEA;
+border-radius: 11px;
+color: #303A3A;
+}
+
+.search-box input:focus {
+border-color: #65CBBE;
+box-shadow: 0 0 0 3px rgba(24, 169, 153, 0.10);
+}
+
+.search-box input::placeholder {
+color: #A2AEAB;
+}
+
+.search-box button {
+background: #18A999;
+color: #FFFFFF;
+border: 1px solid #18A999;
+border-radius: 10px;
+}
+
+.search-box button:hover {
+background: #138F82;
+}
+
+/* 요일 */
+.weekdays div {
+color: #7E908C;
+font-weight: 500;
+}
+
+/* 달력 칸 */
+.day {
+background: #FFFFFF;
+border: 1px solid #E8EFED;
+border-radius: 11px;
+box-shadow: 0 2px 8px rgba(38, 75, 68, 0.025);
+}
+
+.day:hover {
+border-color: #A8DDD4;
+box-shadow: 0 5px 14px rgba(38, 75, 68, 0.07);
+transform: translateY(-1px);
+}
+
+.day strong {
+color: #303A3A;
+font-weight: 500;
+}
+
+.today {
+border: 1.5px solid #18A999;
+background: #F4FCFA;
+}
+
+/* 일정 종류별 파스텔 컬러 */
+.day.행사 {
+background: #EAF8F4;
+}
+
+.day.시험 {
+background: #FFF0EF;
+}
+
+.day.공휴일 {
+background: #EDF3FF;
+}
+
+.day.방학 {
+background: #EFF8E9;
+}
+
+.day.체험학습 {
+background: #FFF6E6;
+}
+
+.day.방송 {
+background: #F4EEFF;
+}
+
+.day.기타 {
+background: #F3F5F4;
+}
+
+/* 일정 이름 */
+.event-name {
+background: rgba(255, 255, 255, 0.88);
+color: #435653;
+border: 1px solid rgba(225, 237, 233, 0.8);
+font-weight: 500;
+}
+
+/* 일정 추가 버튼 */
+#addScheduleBtn {
+background: #18A999;
+color: #FFFFFF;
+border: none;
+border-radius: 11px;
+font-weight: 500;
+}
+
+#addScheduleBtn:hover {
+background: #138F82;
+}
+
+/* 팝업 */
+.popup {
+background: rgba(34, 49, 46, 0.30);
+backdrop-filter: blur(5px);
+}
+
+.popup-box {
+background: #FFFFFF;
+border: 1px solid #EDF2F0;
+border-radius: 17px;
+box-shadow: 0 18px 55px rgba(30, 55, 49, 0.14);
+}
+
+.popup-box h2 {
+color: #303A3A;
+font-weight: 500;
+}
+
+.popup-box input,
+.popup-box textarea,
+.popup-box select {
+background: #FFFFFF;
+border-color: #E4ECEA;
+border-radius: 10px;
+color: #303A3A;
+}
+
+.popup-box input:focus,
+.popup-box textarea:focus,
+.popup-box select:focus {
+border-color: #65CBBE;
+box-shadow: 0 0 0 3px rgba(24, 169, 153, 0.10);
+}
+
+/* 팝업의 일반 버튼 */
+.popup-box button {
+background: #18A999;
+color: #FFFFFF;
+border-color: #18A999;
+}
+
+.popup-box button:hover {
+background: #138F82;
+}
+
+/* X 닫기 버튼 */
+.close-btn {
+background: #F0F7F5 !important;
+color: #607570 !important;
+}
+
+.close-btn:hover {
+background: #DFF2ED !important;
+}
+
+/* 일정 상세 정보 */
+#viewTitle {
+color: #303A3A;
+font-weight: 500;
+}
+
+#viewTitle::after {
+background: #18A999;
+}
+
+#viewDate,
+#viewPlace,
+#viewType {
+color: #71827E;
+}
+
+.info-box {
+background: #F7FAF9;
+border-color: #E8EFED;
+color: #4B5B57;
+}
+
+#viewContent {
+border-color: #E8EFED;
+color: #4B5B57;
+}
+
+/* SVG 아이콘 박스 */
+.detail-icon {
+border-radius: 13px;
+}
+
+.calendar-icon {
+background: #E2F6F1;
+color: #159D8D;
+}
+
+.place-icon {
+background: #EAF1FF;
+color: #6486CE;
+}
+
+.type-icon {
+background: #F0EAFE;
+color: #8B75C9;
+}
+
+/* 수정·삭제 버튼 */
+#editBtn {
+background: #E2F6F1;
+border-color: #D1EEE7;
+color: #168F82;
+}
+
+#editBtn:hover {
+background: #D1EEE7;
+}
+
+#deleteBtn {
+background: #FFF0EF;
+border-color: #F4DEDB;
+color: #C66D66;
+}
+
+#deleteBtn:hover {
+background: #FBE2DF;
+}
+
+/* 포커스 표시 */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+outline: 2px solid #65CBBE;
+outline-offset: 2px;
+}
+/* 일정 카드 영역 */
+.schedule-section {
+margin-top: 32px;
+}
+
+.section-heading {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 16px;
+}
+
+.section-heading h2 {
+margin-top: 4px;
+font-size: 21px;
+font-weight: 600;
+letter-spacing: -0.6px;
+color: #303A3A;
+}
+
+.section-label {
+color: #18A999;
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 1.8px;
+}
+
+.section-icon {
+width: 46px;
+height: 46px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 14px;
+font-size: 24px;
+}
+
+.mint-icon {
+background: #E3F7F2;
+color: #159E8E;
+}
+
+.blue-icon {
+background: #EDF2FF;
+color: #6486CE;
+}
+
+.schedule-list {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+
+.schedule-card {
+display: flex;
+align-items: center;
+gap: 14px;
+width: 100%;
+padding: 17px;
+background: #FFFFFF;
+border: 1px solid #E8EFED;
+border-radius: 16px;
+text-align: left;
+color: #303A3A;
+box-shadow: 0 3px 12px rgba(38, 75, 68, 0.04);
+}
+
+.schedule-card:hover {
+border-color: #A8DDD4;
+transform: translateY(-1px);
+}
+
+.schedule-card-icon {
+flex-shrink: 0;
+width: 48px;
+height: 48px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 13px;
+background: #E3F7F2;
+color: #159E8E;
+font-size: 22px;
+}
+
+.schedule-card-info {
+flex: 1;
+min-width: 0;
+}
+
+.schedule-card-title {
+font-size: 16px;
+font-weight: 600;
+overflow-wrap: anywhere;
+}
+
+.schedule-card-date {
+margin-top: 5px;
+color: #83918E;
+font-size: 13px;
+}
+
+.schedule-card-arrow {
+color: #9AADA8;
+font-size: 23px;
+}
+
+.empty-schedule {
+padding: 20px;
+text-align: center;
+color: #8B9995;
+font-size: 14px;
+background: #F8FBFA;
+border: 1px dashed #E0EBE7;
+border-radius: 14px;
+}
+
+@media (max-width: 600px) {
+.schedule-section {
+margin-top: 26px;
+}
+
+.section-heading h2 {
+    font-size: 19px;
+}
+.schedule-card {
+    padding: 13px;
+    gap: 11px;
+    border-radius: 14px;
+}
+.schedule-card-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 12px;
+}
+.schedule-card-title {
+    font-size: 14px;
+}
+.schedule-card-date {
+    font-size: 12px;
+}
+
+}
+
+/* ==================================
+   송촌중 일정 - 공식 홈페이지 디자인
+   기존 기능과 레이아웃 유지
+================================== */
+
+:root {
+    --school-navy: #183b52;
+    --school-blue: #285a70;
+    --school-mint: #dff3ed;
+    --school-mint-dark: #398b78;
+    --school-bg: #f4f8f8;
+    --school-border: #dce8e9;
+    --school-text: #263943;
+    --school-muted: #71838a;
+    --school-white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--school-bg);
+    color: var(--school-text);
+    font-family: "Malgun Gothic", "맑은 고딕",
+                 "Apple SD Gothic Neo", sans-serif;
+    line-height: 1.6;
+}
+
+/* 전체 콘텐츠 */
+.container {
+    width: 94%;
+    max-width: 1120px;
+    margin: 34px auto;
+}
+
+/* 학교 제목 */
+h1 {
+    color: var(--school-navy);
+    font-size: clamp(27px, 4vw, 36px);
+    font-weight: 800;
+    letter-spacing: -1.2px;
+    margin-bottom: 22px;
+}
+
+/* 위쪽 검색 및 버튼 영역 */
+.top-bar {
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+input,
+select,
+textarea {
+    border: 1px solid var(--school-border);
+    border-radius: 9px;
+    background: var(--school-white);
+    color: var(--school-text);
+    padding: 11px 13px;
+    font: inherit;
+    outline: none;
+    max-width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--school-mint-dark);
+    box-shadow: 0 0 0 3px rgba(57, 139, 120, 0.12);
+}
+
+/* 버튼 공통 */
+button {
+    font-family: inherit;
+    transition: background 0.18s ease,
+                box-shadow 0.18s ease,
+                transform 0.18s ease;
+}
+
+#searchBtn,
+#addScheduleBtn {
+    border: 0;
+    border-radius: 9px;
+    background: var(--school-navy);
+    color: white;
+    font-weight: 700;
+    padding: 11px 17px;
+    cursor: pointer;
+}
+
+#searchBtn:hover,
+#addScheduleBtn:hover {
+    background: var(--school-blue);
+    box-shadow: 0 4px 12px rgba(24, 59, 82, 0.16);
+}
+
+/* 요일 */
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+    margin-bottom: 7px;
+    color: var(--school-muted);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* 달력 바깥 */
+#calendar {
+    background: var(--school-white);
+    border: 1px solid var(--school-border);
+    border-radius: 15px;
+    padding: 9px;
+    box-shadow: 0 5px 20px rgba(30, 66, 75, 0.045);
+    overflow: hidden;
+}
+
+/* 날짜 칸: 기존 달력 구조 유지 */
+#calendar > div {
+    min-width: 0;
+}
+
+/* 일정 등록 버튼 */
+#addScheduleBtn {
+    margin-top: 18px;
+    margin-bottom: 10px;
+}
+
+/* 오늘의 일정 · 최근 일정 */
+.schedule-section {
+    background: var(--school-white);
+    border: 1px solid var(--school-border);
+    border-radius: 15px;
+    padding: 21px;
+    margin-top: 20px;
+    box-shadow: 0 5px 20px rgba(30, 66, 75, 0.04);
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.section-heading h2 {
+    margin: 2px 0 0;
+    color: var(--school-navy);
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.section-label {
+    color: var(--school-mint-dark);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+}
+
+.section-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 20px;
+}
+
+.mint-icon {
+    color: var(--school-mint-dark);
+    background: var(--school-mint);
+}
+
+.blue-icon {
+    color: var(--school-blue);
+    background: #e8f0f6;
+}
+
+/* 일정 카드 */
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.schedule-card {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px;
+    border: 1px solid #e7eeee;
+    border-radius: 11px;
+    background: #fff;
+    color: var(--school-text);
+    text-align: left;
+    cursor: pointer;
+}
+
+.schedule-card:hover {
+    border-color: #b7ded2;
+    background: #f7fbf9;
+}
+
+.schedule-card-icon {
+    flex: 0 0 39px;
+    width: 39px;
+    height: 39px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--school-mint);
+    color: var(--school-mint-dark);
+    font-size: 18px;
+}
+
+.schedule-card-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.schedule-card-title {
+    overflow-wrap: anywhere;
+    color: var(--school-navy);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.schedule-card-date {
+    color: var(--school-muted);
+    font-size: 12px;
+}
+
+.schedule-card-arrow {
+    flex: 0 0 auto;
+    color: var(--school-muted);
+    font-size: 23px;
+}
+
+.empty-schedule {
+    margin: 0;
+    padding: 20px 10px;
+    color: var(--school-muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+/* 팝업 */
+.popup {
+    padding: 16px;
+}
+
+.popup-box {
+    width: 100%;
+    max-width: 460px;
+    max-height: 88vh;
+    overflow-y: auto;
+    border: 1px solid var(--school-border);
+    border-radius: 17px;
+    background: var(--school-white);
+    box-shadow: 0 18px 55px rgba(18, 48, 62, 0.2);
+    padding: 25px;
+}
+
+.popup-box h2 {
+    color: var(--school-navy);
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    overflow-wrap: anywhere;
+}
+
+.close-btn {
+    border: 0;
+    border-radius: 8px;
+    background: #edf4f3;
+    color: var(--school-navy);
+    cursor: pointer;
+}
+
+.detail-row {
+    border-bottom: 1px solid #edf1f1;
+    padding: 9px 0;
+}
+
+.info-box {
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #f4f8f8;
+    overflow-wrap: anywhere;
+}
+
+/* 모바일 화면 */
+@media (max-width: 600px) {
+    .container {
+        width: 96%;
+        margin: 24px auto;
+    }
+
+    h1 {
+        font-size: 27px;
+        margin-bottom: 18px;
+    }
+
+    .top-bar {
+        flex-wrap: wrap;
+    }
+
+    .weekdays {
+        gap: 2px;
+        font-size: 11px;
+    }
+
+    #calendar {
+        padding: 4px;
+        border-radius: 11px;
+    }
+
+    .schedule-section {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .section-heading h2 {
+        font-size: 19px;
+    }
+
+    .schedule-card {
+        padding: 11px;
+        gap: 10px;
+    }
+
+    .popup-box {
+        padding: 19px;
+    }
+
+    #searchBtn,
+    #addScheduleBtn {
+        min-height: 42px;
+    }
+}
+
+/* 송촌중학교 공식 헤더 */
+.school-header {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    padding: 25px 27px;
+    margin-bottom: 25px;
+    background: #ffffff;
+    border: 1px solid #dce8e9;
+    border-top: 4px solid #285a70;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(30, 66, 75, 0.05);
+}
+
+.school-symbol {
+    flex: 0 0 58px;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: #dff3ed;
+    color: #285a70;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.school-heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.school-name {
+    margin: 0 0 2px;
+    color: #398b78;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.school-heading h1 {
+    margin: 0;
+    color: #183b52;
+    font-size: 29px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.school-subtitle {
+    margin: 5px 0 0;
+    color: #71838a;
+    font-size: 12px;
+}
+
+.school-header-label {
+    color: #8ba6a9;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.8;
+    letter-spacing: 1.5px;
+    text-align: right;
+}
+
+@media (max-width: 600px) {
+    .school-header {
+        gap: 12px;
+        padding: 19px 15px;
+    }
+
+    .school-symbol {
+        flex-basis: 46px;
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
+    }
+
+    .school-heading h1 {
+        font-size: 23px;
+    }
+
+    .school-header-label {
+        font-size: 8px;
+        letter-spacing: 0.5px;
+    }
+}
+
+/* 송촌중학교 심플 헤더 */
+.school-header {
+    display: flex;
+    align-items: center;
+    padding: 22px 26px;
+    margin-bottom: 25px;
+    background: #ffffff;
+    border: 1px solid #dce8e9;
+    border-top: 4px solid #398b78;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(30, 66, 75, 0.05);
+}
+
+.school-header h1 {
+    margin: 0;
+    color: #183b52;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+}
+
+@media (max-width: 600px) {
+    .school-header {
+        padding: 19px 17px;
+        margin-bottom: 20px;
+    }
+
+    .school-header h1 {
+        font-size: 29px;
+    }
+}
+
+/* 송촌중학교 제목 강제 표시 */
+header.school-header {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100%;
+    padding: 22px 26px;
+    margin-bottom: 25px;
+    background: #ffffff;
+    border: 1px solid #dce8e9;
+    border-top: 4px solid #398b78;
+    border-radius: 14px;
+}
+
+/* 송촌중학교 제목 */
+.container > header.school-header {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 75px;
+    padding: 20px 24px;
+    margin: 0 0 25px;
+    background: #ffffff;
+    border: 1px solid #dce8e9;
+    border-top: 4px solid #398b78;
+    border-radius: 14px;
+}
+
+.container > header.school-header h1 {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: #183b52;
+    -webkit-text-fill-color: #183b52;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -1px;
+}
+
+@media (max-width: 600px) {
+    .container > header.school-header {
+        padding: 19px 17px;
+    }
+
+    .container > header.school-header h1 {
+        font-size: 29px;
+    }
+}
+/* 송촌중학교 제목 디자인 */
+.container > header.school-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 85px;
+    padding: 18px 25px;
+    margin-bottom: 22px;
+
+    background: #ffffff;
+    border: 1px solid #d7ebe5;
+    border-left: 6px solid #55b9a5;
+    border-radius: 18px;
+
+    box-shadow: 0 5px 18px rgba(45, 100, 90, 0.08);
+}
+
+.container > header.school-header h1 {
+    display: block;
+    visibility: visible;
+    height: auto;
+    margin: 0;
+    padding: 0;
+
+    color: #234b50;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .container > header.school-header {
+        min-height: 72px;
+        padding: 15px 17px;
+        margin-bottom: 18px;
+    }
+
+    .container > header.school-header h1 {
+        font-size: 26px;
+    }
+}

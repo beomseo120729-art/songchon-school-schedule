@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>학교 일정</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="container">
+
+<header class="school-header">
+    <h1>송촌중학교</h1>
+</header>
+
+<div class="top-bar">
+
+<button id="prevMonth">◀</button>
+
+<h2 id="monthTitle"></h2>
+
+<button id="nextMonth">▶</button>
+
+</div>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchInput"
+placeholder="일정 검색">
+
+<button id="searchBtn">검색</button>
+
+</div>
+
+<div class="weekdays">
+
+<div>일</div>
+<div>월</div>
+<div>화</div>
+<div>수</div>
+<div>목</div>
+<div>금</div>
+<div>토</div>
+
+</div>
+
+<div id="calendar"></div>
+
+<button id="addScheduleBtn">
+     일정 등록
+</button>
+<!-- 오늘의 일정 -->
+<section class="schedule-section">
+    <div class="section-heading">
+        <div>
+            <span class="section-label">TODAY</span>
+            <h2>오늘의 일정</h2>
+        </div>
+        <span class="section-icon mint-icon">▦</span>
+    </div>
+    <div id="todaySchedules" class="schedule-list">
+        <p class="empty-schedule">오늘 등록된 일정이 없어요.</p>
+    </div>
+</section>
+<!-- 최근 일정 -->
+<section class="schedule-section">
+    <div class="section-heading">
+        <div>
+            <span class="section-label">UPCOMING</span>
+            <h2>최근 일정</h2>
+        </div>
+        <span class="section-icon blue-icon">▤</span>
+    </div>
+    <div id="recentSchedules" class="schedule-list">
+        <p class="empty-schedule">일정을 불러오는 중이에요.</p>
+    </div>
+</section>
+</div>
+<!-- 학생회 인증 --> 
+
+</button>
+
+</div>
+
+<!-- 학생회 인증 -->
+
+<div class="popup" id="passwordPopup">
+
+<div class="popup-box">
+
+<h2>학생회 인증</h2>
+
+<input
+type="password"
+id="passwordInput"
+placeholder="비밀번호">
+
+<button id="checkPassword">
+
+확인
+
+</button>
+
+<button id="closePassword">
+
+닫기
+
+</button>
+
+</div>
+
+</div>
+
+<!-- 일정 등록 -->
+
+<div class="popup" id="schedulePopup">
+
+<div class="popup-box">
+
+<h2>일정 등록</h2>
+
+<label>제목</label>
+
+<input
+type="text"
+id="titleInput">
+
+<label>종류</label>
+
+<select id="typeInput">
+
+<option>시험</option>
+<option>행사</option>
+<option>방송</option>
+<option>체험학습</option>
+<option>공휴일</option>
+<option>방학</option>
+<option>기타</option>
+
+</select>
+
+<label>시작 날짜</label>
+
+<input
+type="date"
+id="startDateInput">
+
+<label>종료 날짜</label>
+
+<input
+type="date"
+id="endDateInput">
+
+<label>장소</label>
+
+<input
+type="text"
+id="placeInput">
+
+<label>내용</label>
+
+<textarea id="contentInput"></textarea>
+
+<label>사진</label>
+
+<input
+type="file"
+id="imageInput">
+
+<button id="saveSchedule">
+
+등록
+
+</button>
+
+<button id="closeSchedule">
+
+닫기
+
+</button>
+
+</div>
+
+</div>
+
+<!-- 일정 보기 -->
+
+<div class="popup" id="viewPopup">
+    <div class="popup-box">
+    <button class="close-btn" id="closeView" aria-label="닫기">×</button>
+    <h2 id="viewTitle"></h2>
+    <div class="detail-row">
+        <div class="detail-icon calendar-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3.5" y="5" width="17" height="16" rx="3"></rect>
+                <path d="M7.5 3v4M16.5 3v4M3.5 10h17"></path>
+            </svg>
+        </div>
+        <p id="viewDate"></p>
+    </div>
+    <div class="detail-row">
+        <div class="detail-icon place-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"></path>
+                <circle cx="12" cy="10" r="2.5"></circle>
+            </svg>
+        </div>
+        <p id="viewPlace"></p>
+    </div>
+    <div class="detail-row">
+        <div class="detail-icon type-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 4.5h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z"></path>
+                <path d="M8 9h8M8 13h8"></path>
+            </svg>
+        </div>
+        <p id="viewType"></p>
+    </div>
+    <img id="viewImage" alt="일정 이미지">
+    <div class="info-box">
+        <p id="viewContent"></p>
+    </div>
+    <div class="popup-buttons">
+
+            <div class="button-row">
+
+                <button id="editBtn">수정</button>
+
+                <button id="deleteBtn">삭제</button>
+
+            </div>
+
+        </div>
+</div>
+</div>
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
