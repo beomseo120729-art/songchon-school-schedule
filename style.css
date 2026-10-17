@@ -1714,3 +1714,9 @@ header.school-header {
         font-size: 26px;
     }
 }
+/* 핸드폰에서만 달력 날짜 칸 높이 조절 */
+@media (max-width: 600px) {
+    #calendar > div {
+        min-height: 0;
+    }
+}
