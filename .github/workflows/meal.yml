@@ -40,37 +40,35 @@ jobs:
               "MLSV_YMD": date
           }
 
-          url = (
-              "https://open.neis.go.kr/hub/mealServiceDietInfo?"
-              + urllib.parse.urlencode(params)
-          )
-
-          request = urllib.request.Request(
-              url,
-              headers={"User-Agent": "SchoolSchedule"}
-          )
+          url = "https://open.neis.go.kr/hub/mealServiceDietInfo?" + urllib.parse.urlencode(params)
+          request = urllib.request.Request(url, headers={"User-Agent": "SchoolSchedule"})
 
           with urllib.request.urlopen(request, timeout=30) as response:
               data = json.load(response)
 
-         rows = data.get("mealServiceDietInfo", [])
-meals = []
+          meals = []
+          groups = data.get("mealServiceDietInfo", [])
 
-if rows:
-    for row_group in rows:
-        if "row" in row_group:
-            for row in row_group["row"]:
-                meals.append({
-                    "name": row.get("MMEAL_SC_NM", ""),
-                    "menu": row.get("DDISH_NM", ""),
-                    "calories": row.get("CAL_INFO", "")
-                })
+          if len(groups) > 1:
+              for row in groups[1].get("row", []):
+                  meals.append({
+                      "name": row.get("MMEAL_SC_NM", ""),
+                      "menu": row.get("DDISH_NM", ""),
+                      "calories": row.get("CAL_INFO", "")
+                  })
+
           result = {"date": date, "meals": meals}
 
           with open("meal.json", "w", encoding="utf-8") as file:
               json.dump(result, file, ensure_ascii=False, indent=2)
 
           print("급식 데이터 파일 생성 완료")
+
+          if meals:
+              print("급식 메뉴 개수:", len(meals))
+          else:
+              print("해당 날짜의 급식 데이터가 없습니다.")
+
           PY
 
       - name: Commit meal data
