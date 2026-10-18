@@ -1892,3 +1892,74 @@ header.school-header {
     background: #EEEEEE;
     color: #606060;
 }
+/* =========================
+   송촌중학교 로고 및 제목
+========================= */
+
+.school-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding: 8px 2px 16px;
+    border-bottom: 1px solid #e7eee9;
+}
+
+.school-logo {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.school-title-wrap {
+    min-width: 0;
+}
+
+.school-subtitle {
+    display: block;
+    margin-bottom: 4px;
+    color: #729887;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+}
+
+.school-header h1 {
+    margin: 0;
+    color: #294b3e;
+    font-size: 25px;
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: -1px;
+}
+
+.school-header p {
+    margin: 4px 0 0;
+    color: #8b9890;
+    font-size: 12px;
+}
+
+@media (max-width: 480px) {
+    .school-header {
+        gap: 11px;
+        margin-bottom: 16px;
+        padding-bottom: 13px;
+    }
+
+    .school-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+    .school-header h1 {
+        font-size: 22px;
+    }
+
+    .school-subtitle {
+        font-size: 8px;
+        letter-spacing: 1px;
+    }
+}
