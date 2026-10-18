@@ -1892,24 +1892,20 @@ header.school-header {
     background: #EEEEEE;
     color: #606060;
 }
-/* =========================
-   송촌중학교 로고 및 제목
-========================= */
+/* 송촌중 일정 헤더 */
 
 .school-header {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 14px;
-    margin-bottom: 22px;
-    padding: 8px 2px 16px;
-    border-bottom: 1px solid #e7eee9;
+    gap: 12px;
+    margin: 0 0 20px;
+    padding: 4px 0 16px;
+    border-bottom: 1px solid #edf1ed;
 }
 
 .school-logo {
-    display: block;
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
     flex-shrink: 0;
 }
@@ -1920,46 +1916,43 @@ header.school-header {
 
 .school-subtitle {
     display: block;
-    margin-bottom: 4px;
-    color: #729887;
+    margin-bottom: 3px;
+    color: #81998a;
     font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 1.3px;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .school-header h1 {
     margin: 0;
-    color: #294b3e;
-    font-size: 25px;
-    font-weight: 800;
-    line-height: 1.35;
-    letter-spacing: -1px;
+    padding: 0;
+    color: #304b3d;
+    font-size: 23px;
+    font-weight: 750;
+    line-height: 1.3;
+    letter-spacing: -0.8px;
 }
 
 .school-header p {
     margin: 4px 0 0;
-    color: #8b9890;
-    font-size: 12px;
+    color: #8b958e;
+    font-size: 11px;
+    line-height: 1.4;
 }
 
 @media (max-width: 480px) {
     .school-header {
-        gap: 11px;
+        gap: 10px;
         margin-bottom: 16px;
         padding-bottom: 13px;
     }
 
     .school-logo {
-        width: 52px;
-        height: 52px;
+        width: 44px;
+        height: 44px;
     }
 
     .school-header h1 {
-        font-size: 22px;
-    }
-
-    .school-subtitle {
-        font-size: 8px;
-        letter-spacing: 1px;
+        font-size: 21px;
     }
 }
