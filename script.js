@@ -39,57 +39,50 @@ const viewPopup = document.getElementById("viewPopup");
 // 달력 그리기
 // =========================
 
-function drawCalendar(){
-
-    calendar.innerHTML = "";   // ⭐ 이 줄 추가
+function drawCalendar() {
+    calendar.innerHTML = "";
 
     document.getElementById("monthTitle").innerText =
-    `${currentYear}년 ${currentMonth + 1}월`;
+        `${currentYear}년 ${currentMonth + 1}월`;
 
-    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-    const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const firstDay =
+        new Date(currentYear, currentMonth, 1).getDay();
 
-    for(let i = 0; i < firstDay; i++){
-    const empty = document.createElement("div");
-    empty.className = "empty";
-    calendar.appendChild(empty);
-}
-    for(let i = 1; i <= lastDay; i++){
+    const lastDay =
+        new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        calendar.appendChild(empty);
+    }
+
+    for (let i = 1; i <= lastDay; i++) {
         const day = document.createElement("div");
-
         day.className = "day";
 
-
         const key =
-`${currentYear}-${String(currentMonth+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`;
+            `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
 
-if (schedules[key]) {
+        const dateNumber = document.createElement("strong");
+        dateNumber.textContent = i;
+        day.appendChild(dateNumber);
 
-    // 일정 종류를 day 클래스에 추가
-    day.classList.add(schedules[key].type);
+        const dayEvents = schedules[key] || [];
 
-    day.innerHTML = `
-<strong>${i}</strong>
-<div class="event-name">
-${schedules[key].type}
-</div>
-`;
+        dayEvents.forEach(event => {
+            const eventName = document.createElement("div");
+            eventName.className = "event-name";
+            eventName.textContent =
+                event.title || event.type || "학교 일정";
 
-} else {
-
-    day.innerHTML = `
-        <strong>${i}</strong>
-    `;
-
-}
-
+            day.appendChild(eventName);
+        });
 
         day.onclick = () => openSchedule(i);
 
         calendar.appendChild(day);
-
     }
-
 }
 
 
@@ -129,7 +122,11 @@ async function loadEvents(){
         const key =
 `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 
-        schedules[key] = {
+        if (!schedules[key]) {
+    schedules[key] = [];
+}
+
+schedules[key].push({
     id: doc.id,
     title: data.title,
     content: data.description,
@@ -137,7 +134,7 @@ async function loadEvents(){
     place: data.place,
     startDate: data.startDate,
     endDate: data.endDate
-};
+});
     }
 });
 
@@ -168,21 +165,22 @@ function renderScheduleCards() {
     const todayKey =
         `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
-    // 날짜별로 반복 저장된 일정을 고유 일정으로 정리
+    // 날짜별 배열에 들어 있는 일정을 하나씩 모으기
     const uniqueEvents = new Map();
 
-    Object.entries(schedules).forEach(([key, event]) => {
+    Object.values(schedules).flat().forEach(event => {
         const id = event.id || `${event.title}-${event.startDate}`;
 
         if (!uniqueEvents.has(id)) {
-            uniqueEvents.set(id, { ...event, calendarKey: key });
+            uniqueEvents.set(id, event);
         }
     });
 
     const events = [...uniqueEvents.values()];
 
     const todayEvents = events.filter(event =>
-        event.startDate <= todayKey && event.endDate >= todayKey
+        event.startDate <= todayKey &&
+        event.endDate >= todayKey
     );
 
     const upcomingEvents = events
@@ -201,20 +199,14 @@ function renderScheduleCards() {
         return `${start.replaceAll("-", ".")} ~ ${end.replaceAll("-", ".")}`;
     }
 
-    function showEmpty(box, message) {
-        box.replaceChildren();
-
-        const p = document.createElement("p");
-        p.className = "empty-schedule";
-        p.textContent = message;
-        box.appendChild(p);
-    }
-
     function drawCards(box, list, emptyMessage) {
         box.replaceChildren();
 
-        if (!list.length) {
-            showEmpty(box, emptyMessage);
+        if (list.length === 0) {
+            const p = document.createElement("p");
+            p.className = "empty-schedule";
+            p.textContent = emptyMessage;
+            box.appendChild(p);
             return;
         }
 
@@ -246,12 +238,6 @@ function renderScheduleCards() {
             card.append(icon, info, arrow);
 
             card.addEventListener("click", () => {
-                const eventDate = event.startDate || event.calendarKey;
-                const [year, month, day] = eventDate.split("-").map(Number);
-                const key = eventDate;
-
-                selectedKey = key;
-
                 document.getElementById("viewTitle").textContent =
                     event.title || "학교 일정";
 
@@ -267,8 +253,9 @@ function renderScheduleCards() {
                 document.getElementById("viewContent").textContent =
                     event.content || "등록된 설명이 없습니다.";
 
-                const popup = document.getElementById("viewPopup");
-                popup.style.display = "flex";
+                selectedKey = event.startDate;
+
+                document.getElementById("viewPopup").style.display = "flex";
             });
 
             box.appendChild(card);
@@ -301,40 +288,46 @@ function checkAdminPassword() {
 // 일정 보기
 // =========================
 function openSchedule(day) {
-    
+    const key =
+        `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+    selectedKey = key;
+
+    const events = schedules[key] || [];
+
+    document.getElementById("viewDate").textContent =
+        `${currentYear}년 ${currentMonth + 1}월 ${day}일`;
+
+    const title = document.getElementById("viewTitle");
+    const place = document.getElementById("viewPlace");
+    const type = document.getElementById("viewType");
+    const content = document.getElementById("viewContent");
+
+    if (events.length === 0) {
+        title.textContent = "학교 일정";
+        place.textContent = "";
+        type.textContent = "";
+        content.textContent = "등록된 일정이 없습니다.";
+    } else {
+        title.textContent = events.map((event, index) =>
+            `${index + 1}. ${event.title || "제목 없는 일정"}`
+        ).join("\n");
+
+        place.textContent = events.map((event, index) =>
+            `${index + 1}. ${event.place || "장소 미정"}`
+        ).join("\n");
+
+        type.textContent = events.map((event, index) =>
+            `${index + 1}. ${event.type || "기타"}`
+        ).join("\n");
+
+        content.textContent = events.map((event, index) =>
+            `${index + 1}. ${event.content || "설명 없음"}`
+        ).join("\n\n");
+    }
 
     viewPopup.style.display = "flex";
-
-    const key =
-`${currentYear}-${String(currentMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
-selectedKey = key;
-
-    if(schedules[key]){
-
-        document.getElementById("viewDate").innerText =
-    `${currentYear}년 ${currentMonth+1}월 ${day}일`;
-
-document.getElementById("viewPlace").innerText =
-    schedules[key].place;
-
-document.getElementById("viewType").innerText =
-    schedules[key].type;;
-
-        document.getElementById("viewContent").innerText =
-            schedules[key].content;
-
-    }else{
-
-        document.getElementById("viewTitle").innerText = "학교 일정";
-        document.getElementById("viewDate").innerText = "";
-        document.getElementById("viewPlace").innerText = "";
-        document.getElementById("viewType").innerText = "";
-        document.getElementById("viewContent").innerText = "등록된 일정이 없습니다.";
-
-    }
 }
-
 
 // =========================
 // 학생회 인증
