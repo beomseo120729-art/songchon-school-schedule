@@ -1826,3 +1826,69 @@ header.school-header {
     font-size: 13px;
     color: #687b73;
 }
+/* 달력 일정 종류별 색상 */
+.event-name {
+    display: block;
+    margin-top: 4px;
+    padding: 3px 2px;
+    border-radius: 5px;
+    font-size: 11px;
+    line-height: 1.4;
+    text-align: center;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+/* 방송 */
+.event-name[data-type="방송"] {
+    background: #E4EDFF;
+    color: #426FC1;
+}
+
+/* 행사 */
+.event-name[data-type="행사"] {
+    background: #DDF5E7;
+    color: #28784D;
+}
+
+/* 공휴일 */
+.event-name[data-type="공휴일"] {
+    background: #FFE4E6;
+    color: #C43F52;
+}
+
+/* 동아리 */
+.event-name[data-type="동아리"] {
+    background: #F0E5FF;
+    color: #8152B8;
+}
+
+/* 학급회의 */
+.event-name[data-type="학급회의"] {
+    background: #FFF0D9;
+    color: #A96B19;
+}
+
+/* 시험 */
+.event-name[data-type="시험"] {
+    background: #FFE7D6;
+    color: #BD5B27;
+}
+
+/* 체험학습 */
+.event-name[data-type="체험학습"] {
+    background: #DDF4F4;
+    color: #287E83;
+}
+
+/* 방학 */
+.event-name[data-type="방학"] {
+    background: #E8E9FF;
+    color: #575BB4;
+}
+
+/* 기타 */
+.event-name[data-type="기타"] {
+    background: #EEEEEE;
+    color: #606060;
+}

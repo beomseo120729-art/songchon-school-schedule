@@ -75,9 +75,8 @@ function drawCalendar() {
         dayEvents.forEach(event => {
             const eventName = document.createElement("div");
             eventName.className = "event-name";
-            eventName.textContent =
-                event.title || event.type || "학교 일정";
-
+            eventName.textContent = event.type || "기타";
+eventName.dataset.type = event.type || "기타";
             day.appendChild(eventName);
         });
 
