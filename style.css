@@ -1795,3 +1795,34 @@ header.school-header {
         overflow: hidden;
     }
 }
+/* 일정 넘기기 버튼 */
+.event-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin: 8px 0 14px;
+    white-space: nowrap;
+}
+
+.event-navigation button {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1;
+    border: 1px solid #dcebe5;
+    border-radius: 8px;
+    background: #f0faf6;
+    color: #477d69;
+    cursor: pointer;
+}
+
+#eventCount {
+    min-width: 36px;
+    text-align: center;
+    font-size: 13px;
+    color: #687b73;
+}

@@ -23,7 +23,9 @@ import {
 // =========================
 
 const schedules = {};
+let allEvents = [];
 let selectedKey = null;
+let selectedEventId = null;
 
 let currentYear = 2027;
 let currentMonth = 2; // 3월 (0=1월)
@@ -90,65 +92,63 @@ function drawCalendar() {
 // Firebase 일정 불러오기
 // =========================
 
-async function loadEvents(){
+// =========================
+// Firebase 일정 불러오기
+// =========================
 
+async function loadEvents() {
     console.log("Firebase 불러오기 시작");
 
     try {
+        const snapshot = await getDocs(collection(db, "events"));
 
-        const snapshot = await getDocs(
-            collection(db,"events")
-        );
+        // 기존 화면 데이터를 비우고 Firebase에서 다시 구성
+        Object.keys(schedules).forEach(key => delete schedules[key]);
+        allEvents = [];
 
-        console.log(snapshot);
+        snapshot.forEach(documentSnapshot => {
+            const data = documentSnapshot.data();
 
-        console.log("가져온 개수:", snapshot.size);
+            const event = {
+                id: documentSnapshot.id,
+                title: data.title || "",
+                content: data.description || "",
+                type: data.type || "기타",
+                place: data.place || "",
+                startDate: data.startDate,
+                endDate: data.endDate || data.startDate
+            };
 
+            allEvents.push(event);
 
-        snapshot.forEach((doc) => {
+            const start = new Date(event.startDate + "T12:00:00");
+            const end = new Date(event.endDate + "T12:00:00");
 
-    const data = doc.data();
-    console.log(data);
+            for (
+                let d = new Date(start);
+                d <= end;
+                d.setDate(d.getDate() + 1)
+            ) {
+                const key =
+                    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
-    const start = new Date(data.startDate);
-    const end = new Date(data.endDate);
+                if (!schedules[key]) {
+                    schedules[key] = [];
+                }
 
-    for (
-        let d = new Date(start);
-        d <= end;
-        d.setDate(d.getDate() + 1)
-    ) {
-
-        const key =
-`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-
-        if (!schedules[key]) {
-    schedules[key] = [];
-}
-
-schedules[key].push({
-    id: doc.id,
-    title: data.title,
-    content: data.description,
-    type: data.type,
-    place: data.place,
-    startDate: data.startDate,
-    endDate: data.endDate
-});
-    }
-});
-
+                schedules[key].push(event);
+            }
+        });
 
         drawCalendar();
         renderScheduleCards();
 
+        console.log("일정 불러오기 완료:", allEvents.length);
 
-    } catch(error){
-
+    } catch (error) {
         console.error("Firebase 오류:", error);
-
+        alert("일정을 불러오지 못했어요. 인터넷 연결을 확인해주세요.");
     }
-
 }
 
  // =========================
@@ -238,25 +238,19 @@ function renderScheduleCards() {
             card.append(icon, info, arrow);
 
             card.addEventListener("click", () => {
-                document.getElementById("viewTitle").textContent =
-                    event.title || "학교 일정";
+    currentPopupEvents = [event];
+    currentEventIndex = 0;
+    currentPopupDate = event.startDate;
+    selectedKey = event.startDate;
+    selectedEventId = event.id;
 
-                document.getElementById("viewDate").textContent =
-                    formatDate(event);
+    document.getElementById("viewDate").textContent =
+        formatDate(event);
 
-                document.getElementById("viewPlace").textContent =
-                    event.place || "장소 미정";
+    showPopupEvent();
 
-                document.getElementById("viewType").textContent =
-                    event.type || "기타";
-
-                document.getElementById("viewContent").textContent =
-                    event.content || "등록된 설명이 없습니다.";
-
-                selectedKey = event.startDate;
-
-                document.getElementById("viewPopup").style.display = "flex";
-            });
+    viewPopup.style.display = "flex";
+});
 
             box.appendChild(card);
         });
@@ -287,48 +281,77 @@ function checkAdminPassword() {
 // =========================
 // 일정 보기
 // =========================
+let currentPopupEvents = [];
+let currentEventIndex = 0;
+let currentPopupDate = "";
+
+function showPopupEvent() {
+    const event = currentPopupEvents[currentEventIndex];
+
+    if (!event) {
+        document.getElementById("viewTitle").textContent = "학교 일정";
+        document.getElementById("viewPlace").textContent = "";
+        document.getElementById("viewType").textContent = "";
+        document.getElementById("viewContent").textContent = "등록된 일정이 없습니다.";
+        document.getElementById("eventCount").textContent = "0 / 0";
+        document.getElementById("prevEvent").style.display = "none";
+        document.getElementById("nextEvent").style.display = "none";
+        return;
+    }
+
+    document.getElementById("viewTitle").textContent =
+        event.title || "제목 없는 일정";
+
+    document.getElementById("viewPlace").textContent =
+        event.place || "장소 미정";
+
+    document.getElementById("viewType").textContent =
+        event.type || "기타";
+
+    document.getElementById("viewContent").textContent =
+        event.content || "설명 없음";
+
+    document.getElementById("eventCount").textContent =
+        `${currentEventIndex + 1} / ${currentPopupEvents.length}`;
+
+    const showArrows = currentPopupEvents.length > 1;
+
+    document.getElementById("prevEvent").style.display =
+        showArrows ? "" : "none";
+
+    document.getElementById("nextEvent").style.display =
+        showArrows ? "" : "none";
+}
+
 function openSchedule(day) {
-    const key =
-        `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const key = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
     selectedKey = key;
-
-    const events = schedules[key] || [];
+    currentPopupDate = key;
+    currentPopupEvents = schedules[key] || [];
+    currentEventIndex = 0;
 
     document.getElementById("viewDate").textContent =
         `${currentYear}년 ${currentMonth + 1}월 ${day}일`;
 
-    const title = document.getElementById("viewTitle");
-    const place = document.getElementById("viewPlace");
-    const type = document.getElementById("viewType");
-    const content = document.getElementById("viewContent");
-
-    if (events.length === 0) {
-        title.textContent = "학교 일정";
-        place.textContent = "";
-        type.textContent = "";
-        content.textContent = "등록된 일정이 없습니다.";
-    } else {
-        title.textContent = events.map((event, index) =>
-            `${index + 1}. ${event.title || "제목 없는 일정"}`
-        ).join("\n");
-
-        place.textContent = events.map((event, index) =>
-            `${index + 1}. ${event.place || "장소 미정"}`
-        ).join("\n");
-
-        type.textContent = events.map((event, index) =>
-            `${index + 1}. ${event.type || "기타"}`
-        ).join("\n");
-
-        content.textContent = events.map((event, index) =>
-            `${index + 1}. ${event.content || "설명 없음"}`
-        ).join("\n\n");
-    }
+    showPopupEvent();
 
     viewPopup.style.display = "flex";
 }
 
+document.getElementById("prevEvent").onclick = () => {
+    if (currentEventIndex > 0) {
+        currentEventIndex--;
+        showPopupEvent();
+    }
+};
+
+document.getElementById("nextEvent").onclick = () => {
+    if (currentEventIndex < currentPopupEvents.length - 1) {
+        currentEventIndex++;
+        showPopupEvent();
+    }
+};
 // =========================
 // 학생회 인증
 // =========================
@@ -401,104 +424,75 @@ document.getElementById("closeView").onclick = () => {
 
 
     document.getElementById("saveSchedule").onclick = async () => {
-
     const title = document.getElementById("titleInput").value.trim();
     const startDate = document.getElementById("startDateInput").value;
     const endDate = document.getElementById("endDateInput").value;
     const content = document.getElementById("contentInput").value.trim();
     const type = document.getElementById("typeInput").value;
+    const place = document.getElementById("placeInput").value.trim();
+
+    if (!title || !startDate || !endDate) {
+        alert("제목과 시작 날짜, 종료 날짜를 입력해주세요.");
+        return;
+    }
+
+    if (endDate < startDate) {
+        alert("종료 날짜는 시작 날짜보다 빠를 수 없어요.");
+        return;
+    }
 
     const wasEdit = editMode;
 
-    if(title === "" || startDate === "" || endDate === ""){
-    alert("제목과 시작 날짜, 종료 날짜를 입력해주세요.");
-    return;
-}
+    try {
+        if (editMode) {
+            if (!selectedEventId) {
+                alert("수정할 일정을 찾을 수 없어요. 다시 선택해주세요.");
+                return;
+            }
 
-    console.log("저장 시작");
-
-    try{
-
-    if(editMode){
-
-        await updateDoc(
-            doc(db,"events",schedules[selectedKey].id),
-            {
+            await updateDoc(doc(db, "events", selectedEventId), {
                 title,
                 startDate,
                 endDate,
                 description: content,
-                place: document.getElementById("placeInput").value,
+                place,
                 type
-            }
-        );
+            });
+        } else {
+            await addDoc(collection(db, "events"), {
+                title,
+                startDate,
+                endDate,
+                description: content,
+                place,
+                type
+            });
+        }
 
         editMode = false;
+        selectedEventId = null;
 
-    }else{
+        await loadEvents();
 
-        await addDoc(
-            collection(db,"events"),
-            {
-                title,
-                startDate,
-                endDate,
-                description: content,
-                place: document.getElementById("placeInput").value,
-                type
-            }
-        );
+        document.getElementById("titleInput").value = "";
+        document.getElementById("startDateInput").value = "";
+        document.getElementById("endDateInput").value = "";
+        document.getElementById("placeInput").value = "";
+        document.getElementById("contentInput").value = "";
+        document.getElementById("imageInput").value = "";
+        document.getElementById("typeInput").selectedIndex = 0;
 
+        schedulePopup.style.display = "none";
+
+        alert(wasEdit ? "일정이 수정되었습니다!" : "일정이 등록되었습니다!");
+
+    } catch (error) {
+        console.error("일정 저장 오류:", error);
+        alert("일정 저장에 실패했어요. 다시 확인해주세요.");
     }
-const start = new Date(startDate);
-const end = new Date(endDate);
-
-for (
-    let d = new Date(start);
-    d <= end;
-    d.setDate(d.getDate() + 1)
-) {
-    const key =
-        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-
-schedules[key] = {
-    id: null,
-    title,
-    content,
-    type,
-    place: document.getElementById("placeInput").value,
-    startDate,
-    endDate
 };
-}
-        console.log("저장 끝");
 
-    }catch(error){
 
-        console.error("저장 오류:", error);
-        return;
-
-    }
-
-    drawCalendar();
-
-    document.getElementById("titleInput").value = "";
-    document.getElementById("startDateInput").value = "";
-    document.getElementById("endDateInput").value = "";
-    document.getElementById("placeInput").value = "";
-    document.getElementById("contentInput").value = "";
-    document.getElementById("imageInput").value = "";
-    document.getElementById("typeInput").selectedIndex = 0;
-
-    schedulePopup.style.display = "none";
-
-    if(wasEdit){
-    alert("일정이 수정되었습니다!");
-}else{
-    alert("일정이 등록되었습니다!");
-}
-
-};
 document.getElementById("prevMonth").onclick = () => {
 
     if(currentYear === 2027 && currentMonth === 2) return;
@@ -527,19 +521,23 @@ document.getElementById("nextMonth").onclick = () => {
     drawCalendar();
 };
 document.getElementById("editBtn").onclick = () => {
+    if (!checkAdminPassword()) return;
 
-    if(!checkAdminPassword()) return;
+    const event = currentPopupEvents[currentEventIndex];
 
-    if(!selectedKey) return;
+    if (!event || !event.id) {
+        alert("수정할 일정을 찾을 수 없어요.");
+        return;
+    }
 
-    const s = schedules[selectedKey];
+    selectedEventId = event.id;
 
-    document.getElementById("titleInput").value = s.title;
-    document.getElementById("startDateInput").value = s.startDate;
-    document.getElementById("endDateInput").value = s.endDate;
-    document.getElementById("placeInput").value = s.place;
-    document.getElementById("contentInput").value = s.content;
-    document.getElementById("typeInput").value = s.type;
+    document.getElementById("titleInput").value = event.title || "";
+    document.getElementById("startDateInput").value = event.startDate || "";
+    document.getElementById("endDateInput").value = event.endDate || "";
+    document.getElementById("placeInput").value = event.place || "";
+    document.getElementById("contentInput").value = event.content || "";
+    document.getElementById("typeInput").value = event.type || "";
 
     editMode = true;
 
@@ -548,34 +546,35 @@ document.getElementById("editBtn").onclick = () => {
 };
 
     document.getElementById("deleteBtn").onclick = async () => {
+    if (!checkAdminPassword()) return;
 
-    if(!checkAdminPassword()) return;
+    const event = currentPopupEvents[currentEventIndex];
 
-    if(!selectedKey) return;
-
-    if(!confirm("정말 삭제하시겠습니까?"))
+    if (!event || !event.id) {
+        alert("삭제할 일정을 찾을 수 없어요.");
         return;
+    }
 
-    try{
+    if (!confirm("이 일정만 삭제하시겠습니까?")) {
+        return;
+    }
 
-        await deleteDoc(
-            doc(db, "events", schedules[selectedKey].id)
-        );
+    try {
+        await deleteDoc(doc(db, "events", event.id));
 
-        delete schedules[selectedKey];
+        selectedEventId = null;
+        currentEventIndex = 0;
 
-        drawCalendar();
+        await loadEvents();
 
         viewPopup.style.display = "none";
 
-        alert("삭제되었습니다.");
+        alert("일정이 삭제되었습니다.");
 
-    }catch(error){
-
-        console.log(error);
-
+    } catch (error) {
+        console.error("일정 삭제 오류:", error);
+        alert("일정 삭제에 실패했어요. 다시 확인해주세요.");
     }
-
 };
 window.onload = () => {
     drawCalendar();
@@ -597,13 +596,13 @@ function searchSchedules() {
 
     const uniqueEvents = new Map();
 
-    Object.values(schedules).forEach(event => {
-        const id = event.id || `${event.title}-${event.startDate}`;
+    allEvents.forEach(event => {
+    const id = event.id || `${event.title}-${event.startDate}`;
 
-        if (!uniqueEvents.has(id)) {
-            uniqueEvents.set(id, event);
-        }
-    });
+    if (!uniqueEvents.has(id)) {
+        uniqueEvents.set(id, event);
+    }
+});
 
     const results = [...uniqueEvents.values()].filter(event =>
         (event.title || "").toLowerCase().includes(keyword) ||
