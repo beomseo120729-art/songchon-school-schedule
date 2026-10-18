@@ -587,3 +587,56 @@ document.getElementById("editBtn").onclick = () => {
 window.onload = () => {
     drawCalendar();
 };
+ // =========================
+// 일정 검색
+// =========================
+
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+
+function searchSchedules() {
+    const keyword = searchInput.value.trim().toLowerCase();
+
+    if (!keyword) {
+        alert("검색할 내용을 입력해주세요.");
+        return;
+    }
+
+    const uniqueEvents = new Map();
+
+    Object.values(schedules).forEach(event => {
+        const id = event.id || `${event.title}-${event.startDate}`;
+
+        if (!uniqueEvents.has(id)) {
+            uniqueEvents.set(id, event);
+        }
+    });
+
+    const results = [...uniqueEvents.values()].filter(event =>
+        (event.title || "").toLowerCase().includes(keyword) ||
+        (event.place || "").toLowerCase().includes(keyword) ||
+        (event.content || "").toLowerCase().includes(keyword) ||
+        (event.type || "").toLowerCase().includes(keyword)
+    );
+
+    if (results.length === 0) {
+        alert("검색 결과가 없어요.");
+        return;
+    }
+
+    const message = results.map((event, index) =>
+        `${index + 1}. ${event.title}\n` +
+        `날짜: ${event.startDate}${event.endDate !== event.startDate ? " ~ " + event.endDate : ""}\n` +
+        `장소: ${event.place || "미정"}`
+    ).join("\n\n");
+
+    alert(`검색 결과 ${results.length}개\n\n${message}`);
+}
+
+searchBtn.addEventListener("click", searchSchedules);
+
+searchInput.addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+        searchSchedules();
+    }
+});
