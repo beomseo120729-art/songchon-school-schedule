@@ -1956,3 +1956,38 @@ header.school-header {
         font-size: 21px;
     }
 }
+/* 제목 영역 크기 줄이기 */
+.school-header {
+    padding: 8px 12px !important;
+    margin-bottom: 14px !important;
+    gap: 10px !important;
+    border-radius: 16px !important;
+}
+
+.school-logo {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+    .school-logo {
+        width: 65px !important;
+        height: 65px !important;
+    }
+}
+
+
+.school-header h1 {
+    font-size: 20px !important;
+}
+
+.school-header p {
+    font-size: 10px !important;
+    margin-top: 2px !important;
+}
+
+.school-subtitle {
+    font-size: 8px !important;
+}
