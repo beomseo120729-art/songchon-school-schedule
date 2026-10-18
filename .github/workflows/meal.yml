@@ -53,17 +53,18 @@ jobs:
           with urllib.request.urlopen(request, timeout=30) as response:
               data = json.load(response)
 
-          rows = data.get("mealServiceDietInfo", [])
-          meals = []
+         rows = data.get("mealServiceDietInfo", [])
+meals = []
 
-          if len(rows) > 1:
-              for row in rows[1].get("row", []):
-                  meals.append({
-                      "name": row.get("MMEAL_SC_NM", ""),
-                      "menu": row.get("DDISH_NM", ""),
-                      "calories": row.get("CAL_INFO", "")
-                  })
-
+if rows:
+    for row_group in rows:
+        if "row" in row_group:
+            for row in row_group["row"]:
+                meals.append({
+                    "name": row.get("MMEAL_SC_NM", ""),
+                    "menu": row.get("DDISH_NM", ""),
+                    "calories": row.get("CAL_INFO", "")
+                })
           result = {"date": date, "meals": meals}
 
           with open("meal.json", "w", encoding="utf-8") as file:
