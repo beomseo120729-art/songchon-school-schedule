@@ -19,8 +19,8 @@ jobs:
       - name: Fetch NEIS meal data
         env:
           NEIS_API_KEY: ${{ secrets.NEIS_API_KEY }}
-          OFFICE_CODE: "교육청코드"
-          SCHOOL_CODE: "학교코드"
+          OFFICE_CODE: G10
+          SCHOOL_CODE: 7441022
         run: |
           python - <<'PY'
           import json
