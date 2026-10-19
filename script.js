@@ -631,3 +631,76 @@ searchInput.addEventListener("keydown", event => {
         searchSchedules();
     }
 });
+// =========================
+// 오늘의 급식 불러오기
+// =========================
+
+const MEAL_API_KEY = 5c03c528eb744c85a24a2aaf2619ead8
+const MEAL_OFFICE_CODE = G10
+const MEAL_SCHOOL_CODE = 7441022
+
+async function loadMeal() {
+    const mealMenu = document.getElementById("mealMenu");
+    const mealInfo = document.getElementById("mealInfo");
+
+    if (!mealMenu || !mealInfo) return;
+
+    const today = new Date();
+    const date = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0")
+    ].join("");
+
+    mealMenu.textContent = "급식을 불러오는 중이에요.";
+    mealInfo.textContent = "";
+
+    const params = new URLSearchParams({
+        KEY: MEAL_API_KEY,
+        Type: "json",
+        pIndex: "1",
+        pSize: "10",
+        ATPT_OFCDC_SC_CODE: MEAL_OFFICE_CODE,
+        SD_SCHUL_CODE: MEAL_SCHOOL_CODE,
+        MLSV_YMD: date
+    });
+
+    try {
+        const response = await fetch(
+            `https://open.neis.go.kr/hub/mealServiceDietInfo?${params}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`요청 오류: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const rows = data.mealServiceDietInfo?.[1]?.row;
+
+        if (!rows || rows.length === 0) {
+            mealMenu.textContent = "오늘은 등록된 급식 정보가 없어요.";
+            return;
+        }
+
+        mealMenu.replaceChildren();
+
+        rows.forEach(row => {
+            const item = document.createElement("p");
+            item.className = "meal-item";
+            item.textContent = row.DDISH_NM
+                .replace(/<br\s*\/?>/gi, "\n")
+                .replace(/\([^)]*\)/g, "")
+                .trim();
+
+            mealMenu.appendChild(item);
+        });
+
+        mealInfo.textContent = `${today.getMonth() + 1}월 ${today.getDate()}일 급식`;
+    } catch (error) {
+        console.error("급식 불러오기 오류:", error);
+        mealMenu.textContent = "급식을 불러오지 못했어요.";
+        mealInfo.textContent = "잠시 후 다시 확인해 주세요.";
+    }
+}
+
+loadMeal();
