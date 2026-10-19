@@ -635,9 +635,9 @@ searchInput.addEventListener("keydown", event => {
 // 오늘의 급식 불러오기
 // =========================
 
-const MEAL_API_KEY = 5c03c528eb744c85a24a2aaf2619ead8
-const MEAL_OFFICE_CODE = G10
-const MEAL_SCHOOL_CODE = 7441022
+const MEAL_API_KEY = "5c03c528eb744c85a24a2aaf2619ead8";
+const MEAL_OFFICE_CODE = "G10";
+const MEAL_SCHOOL_CODE = "7441022";
 
 async function loadMeal() {
     const mealMenu = document.getElementById("mealMenu");
@@ -688,9 +688,13 @@ async function loadMeal() {
             const item = document.createElement("p");
             item.className = "meal-item";
             item.textContent = row.DDISH_NM
-                .replace(/<br\s*\/?>/gi, "\n")
-                .replace(/\([^)]*\)/g, "")
-                .trim();
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/\([^)]*\)/g, "")
+    .split("\n")
+    .map(menu => menu.trim())
+    .filter(menu => menu.length > 0)
+    .map(menu => "• " + menu)
+    .join("\n");
 
             mealMenu.appendChild(item);
         });
