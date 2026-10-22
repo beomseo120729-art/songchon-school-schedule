@@ -708,3 +708,105 @@ async function loadMeal() {
 }
 
 loadMeal();
+
+// =========================
+// 가정통신문 게시판
+// =========================
+
+let notices = [];
+let currentNoticeIndex = 0;
+
+function renderNotice() {
+    const imageArea = document.getElementById("noticeImageArea");
+    const titleElement = document.getElementById("noticeTitle");
+    const pageElement = document.getElementById("noticePage");
+
+    if (!imageArea || !titleElement || !pageElement) return;
+
+    imageArea.replaceChildren();
+
+    if (notices.length === 0) {
+        imageArea.textContent = "등록된 가정통신문이 없어요.";
+        titleElement.textContent = "";
+        pageElement.textContent = "0 / 0";
+        return;
+    }
+
+    const notice = notices[currentNoticeIndex];
+
+    const image = document.createElement("img");
+    image.src = notice.image;
+    image.alt = notice.title;
+
+    imageArea.appendChild(image);
+    titleElement.textContent = notice.title;
+    pageElement.textContent =
+        `${currentNoticeIndex + 1} / ${notices.length}`;
+}
+
+document.getElementById("prevNotice")?.addEventListener("click", () => {
+    if (notices.length === 0) return;
+
+    currentNoticeIndex =
+        (currentNoticeIndex - 1 + notices.length) % notices.length;
+
+    renderNotice();
+});
+
+document.getElementById("nextNotice")?.addEventListener("click", () => {
+    if (notices.length === 0) return;
+
+    currentNoticeIndex =
+        (currentNoticeIndex + 1) % notices.length;
+
+    renderNotice();
+});
+
+// 사진 등록 버튼 만들기
+function createNoticeUploadButton() {
+    const section = document.querySelector(".notice-section");
+    if (!section || document.getElementById("noticeUploadBtn")) return;
+
+    const button = document.createElement("button");
+    button.id = "noticeUploadBtn";
+    button.type = "button";
+    button.textContent = "＋ 사진 등록";
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.multiple = true;
+    fileInput.hidden = true;
+
+    button.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", () => {
+        const files = Array.from(fileInput.files || []);
+
+        files.forEach(file => {
+            if (!file.type.startsWith("image/")) return;
+
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                notices.push({
+                    title: file.name.replace(/\.[^.]+$/, ""),
+                    image: reader.result
+                });
+
+                currentNoticeIndex = notices.length - 1;
+                renderNotice();
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        fileInput.value = "";
+    });
+
+    section.appendChild(button);
+    section.appendChild(fileInput);
+}
+
+createNoticeUploadButton();
+renderNotice();
