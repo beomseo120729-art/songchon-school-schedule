@@ -2016,3 +2016,60 @@ header.school-header {
         gap: 14px;
     }
 }
+/* 급식 카드 제목과 날짜 정리 */
+.lunch-section .meal-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.lunch-section .meal-title {
+    min-width: 0;
+}
+
+.lunch-section .meal-title h2 {
+    font-size: 24px;
+    margin: 4px 0 0;
+}
+
+.lunch-section .meal-heading-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.lunch-section .meal-date {
+    margin: 0;
+    font-size: 13px;
+    color: #78838b;
+    white-space: nowrap;
+}
+
+.lunch-section .meal-heading-right .section-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+}
+
+.lunch-section .meal-item {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+    .lunch-section .meal-title h2 {
+        font-size: 21px;
+    }
+
+    .lunch-section .meal-date {
+        font-size: 11px;
+    }
+
+    .lunch-section .meal-heading-right {
+        gap: 5px;
+    }
+}
